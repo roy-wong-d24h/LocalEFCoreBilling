@@ -24,7 +24,7 @@ namespace EFCoreConsoleApp.TestDriven
                 year=2024,
                 month=5,
                 day=16,
-                transactionId = "123456",
+                transactionId = "1234567",
                 userToken = "userToken",
                 doctorToken = "doctor",
                 customerToken = "customer",
