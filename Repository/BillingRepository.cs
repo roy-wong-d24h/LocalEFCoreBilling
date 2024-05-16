@@ -66,18 +66,33 @@ namespace EFCoreConsoleApp.Repository
 
         public int GetCustomerUsageByYearMonth(int year, int month, string customerToken)
         {
-            int usage = 0;
-            int normal_usage = 0;
-            int failed_usage = 0;
-            List<BillingTransaction> billingTransactions = [];
-            billingTransactions = [.. _context.BillTransactions.Where(x => x.customerToken.Equals(customerToken) && x.year == year && x.month == month)];
-            foreach (BillingTransaction billingTransaction in billingTransactions)
-            {
-                normal_usage += billingTransaction.successClassificationAPICount + billingTransaction.successBPMAPICount;
-                failed_usage += billingTransaction.failureClassificationAPICount + billingTransaction.failureBPMAPICount + billingTransaction.failureRecognitionAPICount;
-            }
+            //int usage = 0;
+            //int normal_usage = 0;
+            //int failed_usage = 0;
+            //List<BillingTransaction> billingTransactions = [];
+            //billingTransactions = [.. _context.BillTransactions.Where(x => x.customerToken.Equals(customerToken) && x.year == year && x.month == month)];
+            //foreach (BillingTransaction billingTransaction in billingTransactions)
+            //{
+            //    normal_usage += billingTransaction.successClassificationAPICount + billingTransaction.successBPMAPICount;
+            //    failed_usage += billingTransaction.failureClassificationAPICount + billingTransaction.failureBPMAPICount + billingTransaction.failureRecognitionAPICount;
+            //}
 
-            usage = normal_usage + (failed_usage / 5);
+            //usage = normal_usage + (failed_usage / threshold);
+
+
+            var usageData = _context.BillTransactions
+                .Where(x => x.customerToken.Equals(customerToken) && x.year == year && x.month == month)
+                .Select(x => new
+                {
+                    NormalUsage = x.successClassificationAPICount + x.successBPMAPICount,
+                    FailedUsage = x.failureClassificationAPICount + x.failureBPMAPICount + x.failureRecognitionAPICount
+                })
+                .ToList();
+
+            int normal_usage = usageData.Sum(x => x.NormalUsage);
+            int failed_usage = usageData.Sum(x => x.FailedUsage);
+
+            int usage = normal_usage + (failed_usage / threshold);
 
 
             return usage;
