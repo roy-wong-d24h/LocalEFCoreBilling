@@ -24,7 +24,7 @@ namespace EFCoreConsoleApp.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=localhost;Database=MyVitomeDB;User ID=sa;Password=dev$123%;TrustServerCertificate=true");
+                optionsBuilder.UseSqlServer("Data Source=localhost;Database=HiDB;User ID=admin;Password=3344;TrustServerCertificate=true");
             }
         }
 
